@@ -5085,6 +5085,10 @@ class FPDF(GraphicsStateMixin, TextRegionMixin):
             if title_style.size_pt is not None:
                 prev_font_size_pt = self.font_size_pt
                 self.font_size_pt = title_style.size_pt
+            # check if l_margin value is of type Align or string
+            align = Align.L
+            if isinstance(title_style.l_margin, Align) or isinstance(title_style.l_margin, str):
+                align = title_style.l_margin
             page_break_triggered = self.multi_cell(
                 w=self.epw,
                 h=self.font_size,
@@ -5093,9 +5097,10 @@ class FPDF(GraphicsStateMixin, TextRegionMixin):
                 new_y=YPos.NEXT,
                 dry_run=True,  # => does not produce any output
                 output=MethodReturnValue.PAGE_BREAK,
+                align=align,
                 padding=Padding(
                     top=title_style.t_margin or 0,
-                    left=title_style.l_margin or 0,
+                    left=title_style.l_margin if isinstance(title_style.l_margin, int) else 0,
                     bottom=title_style.b_margin or 0,
                 ),
             )
@@ -5107,11 +5112,6 @@ class FPDF(GraphicsStateMixin, TextRegionMixin):
             with self._marked_sequence(title=name) as struct_elem:
                 outline_struct_elem = struct_elem
                 with self._use_title_style(title_style):
-
-                    # check if l_margin value is of type Align or string
-                    align = Align.L
-                    if isinstance(title_style.l_margin, Align) or isinstance(title_style.l_margin, str):
-                        align = title_style.l_margin
 
                     self.multi_cell(
                         w=self.epw,
