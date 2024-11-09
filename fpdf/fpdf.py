@@ -5100,7 +5100,11 @@ class FPDF(GraphicsStateMixin, TextRegionMixin):
                 align=align,
                 padding=Padding(
                     top=title_style.t_margin or 0,
-                    left=title_style.l_margin if isinstance(title_style.l_margin, int) else 0,
+                    left=(
+                        title_style.l_margin
+                        if isinstance(title_style.l_margin, int)
+                        else 0
+                    ),
                     bottom=title_style.b_margin or 0,
                 ),
             )
